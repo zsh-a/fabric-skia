@@ -1,33 +1,37 @@
 const http = require('http');
-const net = require('net');
-const { defaultCpuThreadPool } = require('./nodejs-threadpool').threadPool;
+const { FixedThreadPool } = require('./nodejs-threadpool').threadPool;
 const path = require('path');
-const hostname = '127.0.0.1';
+const hostname = '0.0.0.0';
 const port = 3000;
-console.log(defaultCpuThreadPool.coreThreads);
+const threadPool = new FixedThreadPool({preCreate:true,coreThreads:4});
+console.log(threadPool.maxThreads);
 
-async function handle(req,res){
+// async function handle(req,res){
     
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
-    console.log("req");
-    const worker = await defaultCpuThreadPool.submit(path.resolve(__dirname, 'render.js'));
-	worker.on('done', function() {
-        res.write(...arguments);
-        res.end(); 
-        // console.log(...arguments)
-    });
+//     res.statusCode = 200;
+//     res.setHeader('Content-Type', 'text/html');
+//     console.log("req");
+//     const worker = await defaultCpuThreadPool.submit(path.resolve(__dirname, 'render.js'));
+// 	worker.on('done', function() {
+//         res.write(...arguments);
+//         res.end(); 
+//         // console.log(...arguments)
+//     });
 
-    worker.on('error', function() {
-        console.log(...arguments)
-    })
-}
-
+//     worker.on('error', function() {
+//         console.log(...arguments)
+//     })
+// }
 const server = http.createServer(async function(req,res){
-    if(req.url != '/') return;
+    if(req.url != '/') {
+        res.statusCode = 200;
+        res.write('hello world');
+        res.end();
+        return;
+    }
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/html');
-    const worker = await defaultCpuThreadPool.submit(path.resolve(__dirname, 'render.js'));
+    const worker = await threadPool.submit(path.resolve(__dirname, 'render.js'));
 	worker.on('done', function() {
         res.write(...arguments);
         res.end(); 
@@ -42,5 +46,3 @@ const server = http.createServer(async function(req,res){
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
-
-net.createServer();
