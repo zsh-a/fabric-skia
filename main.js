@@ -3,7 +3,7 @@ const { FixedThreadPool } = require('./nodejs-threadpool').threadPool;
 const path = require('path');
 const hostname = '0.0.0.0';
 const port = 3000;
-const threadPool = new FixedThreadPool({preCreate:true,coreThreads:4});
+const threadPool = new FixedThreadPool({preCreate:true,coreThreads:30});
 console.log(threadPool.maxThreads);
 
 // async function handle(req,res){
