@@ -3,7 +3,7 @@ const { FixedThreadPool } = require('./nodejs-threadpool').threadPool;
 const path = require('path');
 const hostname = '0.0.0.0';
 const port = 3000;
-const threadPool = new FixedThreadPool({preCreate:true,coreThreads:30});
+const threadPool = new FixedThreadPool({preCreate:true,coreThreads:8});
 console.log(threadPool.maxThreads);
 
 // async function handle(req,res){
@@ -29,13 +29,13 @@ const server = http.createServer(async function(req,res){
         res.end();
         return;
     }
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
     const worker = await threadPool.submit(path.resolve(__dirname, 'render.js'));
 	worker.on('done', function() {
+        res.statusCode = 200;
+        // res.setHeader('Content-Encoding', 'gzip'); 
+        res.setHeader('Content-Type', 'text/html');
         res.write(...arguments);
         res.end(); 
-        // console.log(...arguments)
     });
 
     worker.on('error', function() {

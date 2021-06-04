@@ -7,6 +7,11 @@ module.exports = async function() {
         let num = Math.ceil(Math.random()*10) % 8 + 1;
         const p = `data/d0/rand_2000_${num}.json`
         fs.readFile(p, 'utf-8',(err,data)=>{
+            if(err){
+                response.writeHead(500, {"Content-Type": "text/plain"});
+                response.write(error + "\n");
+                response.end();
+            }
             canvas.loadFromJSON(data);
             canvas.renderAll();
             resolve(`<img src="${canvas.toDataURL("png")}">`);

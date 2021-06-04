@@ -48,7 +48,6 @@ class HTMLCanvasElementImpl extends HTMLElementImpl {
 
   toDataURL(...args) {
     const canvas = this._getCanvas();
-    // canvas.saveAs("hello.png");
     if (canvas) {
       return canvas.toDataURL(...args);
     }
@@ -58,6 +57,13 @@ class HTMLCanvasElementImpl extends HTMLElementImpl {
       this._ownerDocument._defaultView
     );
     return null;
+  }
+
+  toBuffer(fmt){
+    const canvas = this._getCanvas();
+    if (canvas) {
+      return canvas.toDataURL(fmt);
+    }
   }
 
   toBlob(callback, type, qualityArgument) {

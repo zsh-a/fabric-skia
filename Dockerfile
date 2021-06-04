@@ -6,4 +6,4 @@ RUN yarn
 WORKDIR /fabric-skia
 COPY . .
 RUN npm install
-CMD ["node", "main.js"]
+CMD ["node", "microjob.js"]
