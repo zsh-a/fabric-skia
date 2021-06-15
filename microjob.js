@@ -93,6 +93,8 @@ async function render(data) {
                 res.setHeader('Content-Type', 'image/png');
             else if (fmt == 'jpeg' || fmt == 'jpg')
                 res.setHeader('Content-Type', 'image/jpeg');
+            else if (fmt == 'svg')
+                res.setHeader('Content-Type','text/xml')
             res.write(data);
             res.end();
         });
